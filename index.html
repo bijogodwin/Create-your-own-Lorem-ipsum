@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Creating a  Lorem Ipsum" />
+    <title>Creating a Lorem Ipsum</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f1f5f8;
+        color: #222;
+      }
+
+      .section-center {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 2rem;
+      }
+
+      h3 {
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+        text-align: center;
+      }
+
+      .lorem-form {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.5rem;
+      }
+
+      .lorem-form label {
+        margin-right: 1rem;
+        font-size: 1.2rem;
+      }
+
+      .lorem-form input {
+        padding: 0.5rem;
+        width: 5rem;
+        font-size: 1rem;
+      }
+
+      .lorem-form .btn {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        background-color: #b62020;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        font-size: 1rem;
+      }
+
+      .lorem-text {
+        text-align: justify;
+        line-height: 1.6;
+      }
+
+      @media screen and (max-width: 768px) {
+        .lorem-form {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .lorem-form label {
+          margin-bottom: 0.5rem;
+        }
+
+        .lorem-form input {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <section class="section-center">
+      <h3>tired of boring lorem ipsum?</h3>
+      <form class="lorem-form">
+        <label for="amount">paragraphs:</label>
+        <input type="number" name="amount" id="amount" placeholder="5" />
+        <button type="submit" class="btn">generate</button>
+      </form>
+      <article class="lorem-text"></article>
+    </section>
+
+    <!-- javascript -->
+    <script>
+      const form = document.querySelector(".lorem-form");
+      const amount = document.getElementById("amount");
+      const loremText = document.querySelector(".lorem-text");
+
+      const getLorem = async (url) => {
+        const response = await fetch(url);
+        const data = await response.json();
+        return data;
+      };
+
+      const generateLorem = (data) => {
+        let paragraphs = data.slice(0, amount.value);
+        paragraphs = paragraphs
+          .map((paragraph) => `<p>${paragraph}</p>`)
+          .join("");
+        loremText.innerHTML = paragraphs;
+      };
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const url = "https://baconipsum.com/api/?type=all-meat&paras=10";
+        getLorem(url)
+          .then((data) => generateLorem(data))
+          .catch((error) => console.log(error));
+      });
+    </script>
+  </body>
+</html>
